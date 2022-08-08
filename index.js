@@ -21,7 +21,7 @@ const reducer = (state = 5) => {
   // Redux methods are available from a Redux object
   // For example: Redux.createStore()
   // Define the store here:
-
+const store = Redux.createStore(reducer);
 
 // 3. Get State from the Redux Store
 // The Redux store object provides several methods that allow you to interact with it. For example, you can retrieve the current state held in the Redux store object with the getState() method.
@@ -33,7 +33,7 @@ const store = Redux.createStore(
   );
   
   // Change code below this line
-
+let currentState = store.getState();
 
 // 4. Define a Redux Action
 // Since Redux is a state management framework, updating state is one of its core tasks. In Redux, all state updates are triggered by dispatching actions. An action is simply a JavaScript object that contains information about an action event that has occurred. The Redux store receives these action objects, then updates its state accordingly. Sometimes a Redux action also carries some data. For example, the action carries a username after a user logs in. While the data is optional, actions must carry a type property that specifies the 'type' of action that occurred.
@@ -43,7 +43,9 @@ const store = Redux.createStore(
 // Writing a Redux action is as simple as declaring an object with a type property. Declare an object action and give it a property type set to the string 'LOGIN'.
 
 // Define an action here:
-
+let action={
+  type: 'LOGIN'
+}
 
 
 // 5. Define an Action Creator
@@ -55,7 +57,9 @@ const action = {
     type: 'LOGIN'
   }
   // Define an action creator here:
-
+  function actionCreator() {
+    return action;
+  }
 
 
 // 6. Dispatch an Action Event
@@ -79,7 +83,7 @@ const store = Redux.createStore(
   };
   
   // Dispatch the action here:
-
+  store.dispatch(loginAction());
 
 
 // 7. Handle an Action in the Store
@@ -96,7 +100,13 @@ const defaultState = {
 
 const reducer = (state = defaultState, action) => {
   // Change code below this line
-
+  if (action.type === "LOGIN") {
+    return {
+      login: true
+    };
+  } else {
+    return state;
+  }
   // Change code above this line
 };
 
@@ -124,7 +134,20 @@ const defaultState = {
 
 const authReducer = (state = defaultState, action) => {
   // Change code below this line
+  switch (action.type) {
+    case "LOGIN":
+      return {
+        authenticated: true
+      };
 
+    case "LOGOUT":
+      return {
+        authenticated: false
+      };
+
+    default:
+      return defaultState;
+  }
   // Change code above this line
 };
 
@@ -151,7 +174,8 @@ const logoutUser = () => {
 
 // Note: It's generally a convention to write constants in all uppercase, and this is standard practice in Redux as well.
 
-
+const LOGIN = 'LOGIN';
+const LOGOUT = 'LOGOUT';
 
 const defaultState = {
   authenticated: false
@@ -217,7 +241,8 @@ let count = 0;
 // Change code below this line
 const add = () => (
   count += 1
-)
+);
+store.subscribe(add);
 // Change code above this line
 
 store.dispatch(add());
@@ -276,8 +301,10 @@ const authReducer = (state = {authenticated: false}, action) => {
       return state;
   }
 };
-
-const rootReducer = // Define the root reducer here
+const rootReducer = Redux.combineReducers({
+  count: counterReducer,
+  auth: authReducer
+}); // Define the root reducer here
 
 const store = Redux.createStore(rootReducer);
 
